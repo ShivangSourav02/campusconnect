@@ -25,6 +25,10 @@ public class RFQService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (!user.isVerified()) {
+            throw new RuntimeException("Your account is not verified yet. Please wait for admin approval.");
+        }
+
         School school = schoolRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new RuntimeException("School profile not found. Please create a profile first."));
 

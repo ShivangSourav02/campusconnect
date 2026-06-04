@@ -31,6 +31,10 @@ public class QuotationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (!user.isVerified()) {
+            throw new RuntimeException("Your account is not verified yet. Please wait for admin approval.");
+        }
+
         Vendor vendor = vendorRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new RuntimeException("Vendor profile not found"));
 
@@ -102,11 +106,9 @@ public class QuotationService {
             throw new RuntimeException("Unauthorized to accept this quotation");
         }
 
-        // Accept this quotation
         quotation.setStatus(Quotation.QuotationStatus.ACCEPTED);
         quotationRepository.save(quotation);
 
-        // Reject all other quotations for the same RFQ
         List<Quotation> otherQuotations = quotationRepository.findByRfqId(quotation.getRfq().getId());
         otherQuotations.stream()
                 .filter(q -> !q.getId().equals(quotationId))
@@ -115,7 +117,6 @@ public class QuotationService {
                     quotationRepository.save(q);
                 });
 
-        // Close the RFQ
         RFQ rfq = quotation.getRfq();
         rfq.setStatus(RFQ.RFQStatus.AWARDED);
         rfqRepository.save(rfq);

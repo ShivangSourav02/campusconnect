@@ -30,6 +30,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @Column(nullable = false)
+    private boolean verified = false;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
