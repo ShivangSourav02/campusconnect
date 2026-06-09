@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/rfq/open").permitAll()
                         .requestMatchers("/school/**").hasRole("SCHOOL")
+                        .requestMatchers("/recommend/**").hasRole("SCHOOL")
                         .requestMatchers("/vendor/**").hasRole("VENDOR")
                         .requestMatchers("/rfq/**").hasAnyRole("SCHOOL", "VENDOR", "ADMIN")
                         .requestMatchers("/quotation/**").hasAnyRole("SCHOOL", "VENDOR", "ADMIN")
